@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "contact_model.proto";
+option go_package = "./;pb";
+package pb;
+
+service Contact {
+    rpc ContactMe (ContactMeReq) returns (ContactMeResp);
+}

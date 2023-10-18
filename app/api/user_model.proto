@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option go_package = "./;pb";
+package pb;
+
+
+message UserInfo {
+  string name = 1;
+  string email = 2;
+  string avatar = 3;
+}
+message LoginReq {
+  oneof login_by {
+    string name = 1;
+    string email = 2;
+  }
+  oneof certify_by {
+    string password = 3;
+    string verification_code = 4;
+  }
+
+}
+
+message LoginResp {
+  enum Case{
+    OK = 0;
+    PasswordWrong = 1;
+    UserNotExists = 2;
+    VerificationCodeInvalid = 3;
+    GivenUserHasNoVerificationCode = 4;
+  }
+  UserInfo user = 1;
+  string token = 2;
+  Case case = 3;
+}
+
+message RegisterReq {
+  string name = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message RegisterResp {
+  enum Case {
+    OK = 0;
+    EmailRegistered = 1;
+    NameRegistered = 2;
+  }
+  Case case = 1;
+}
+
+message RegisterVerifyReq {
+  string taskId = 1;
+}
+
+message RegisterVerifyResp {
+  UserInfo user = 1;
+  string token = 2;
+}
+
+message GetVerificationCodeReq {
+  oneof get_by {
+    string email = 1;
+    string name = 2;
+  }
+
+}
+
+message GetVerificationCodeResp {
+  enum Case {
+    OK = 0;
+    UserNotExists = 1;
+  }
+  Case case = 1;
+}

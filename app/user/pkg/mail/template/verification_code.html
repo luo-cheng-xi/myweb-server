@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎登录luo-cheng-xi的个人网站</title>
+
+
+</head>
+<body>
+<div class="background">
+    <div class="box">
+        <header>
+            Luo Chengxi
+        </header>
+        <main>
+            <div class="text">
+                <span style="font-size: 36px">Hello！</span>
+                <br>
+                您正在luo-cheng-xi的个人网站上登录您的账号，验证码是{{.VerificationCode}}，切勿将验证码泄露于他人，本条验证码有效期15分钟
+            </div>
+        </main>
+        <footer>
+            © 2023 luo-cheng-xi. All rights reserved.
+        </footer>
+    </div>
+</div>
+</body>
+<script >
+</script>
+</html>
+
+<style>
+    .background {
+        display: flex;
+        align-items: center;
+    }
+    .text {
+        color: #c0c0c0;
+        display: block;
+    }
+    .box {
+        display: block;
+        margin: auto;
+        background-color: #242424;
+        width: fit-content;
+        padding: 30px 40px 30px
+    }
+    header {
+        color: #c0c0c0;
+        margin: auto;
+        display: block;
+        width: fit-content;
+    }
+    main {
+        width: 800px;
+        /*height: 240px;*/
+        font-size: 24px;
+        display: block;
+        margin: 50px auto
+
+    }
+    footer {
+        color: #c0c0c0;
+        margin: auto;
+        display: block;
+        width: fit-content;
+    }
+</style>

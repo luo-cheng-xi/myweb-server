@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "user_model.proto";
+option go_package = "./;pb";
+package pb;
+
+
+
+service User {
+  rpc Login(LoginReq) returns (LoginResp);
+  rpc Register (RegisterReq) returns (RegisterResp);
+  rpc RegisterVerify (RegisterVerifyReq) returns (RegisterVerifyResp);
+  rpc GetVerificationCode (GetVerificationCodeReq) returns (GetVerificationCodeResp);
+}
