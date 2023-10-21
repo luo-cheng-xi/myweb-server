@@ -7,6 +7,7 @@ import (
 	"myweb/app/api/pb"
 	"myweb/app/gateway/internal/model"
 	"myweb/app/gateway/internal/rsp"
+	"myweb/app/gateway/rpc"
 	"net/http"
 	"time"
 )
@@ -16,12 +17,14 @@ const (
 )
 
 type UserHandler struct {
-	logger *zap.Logger
+	logger   *zap.Logger
+	userConn *rpc.UserConn
 }
 
-func NewUserHandler(logger *zap.Logger) *UserHandler {
+func NewUserHandler(logger *zap.Logger, userConn *rpc.UserConn) *UserHandler {
 	return &UserHandler{
-		logger: logger,
+		logger:   logger,
+		userConn: userConn,
 	}
 }
 
@@ -38,16 +41,8 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 		Email:    userEmail,
 	}
 
-	// 在gin.Context中读取userClient对象信息 | get userClient instance from gon.Context
-	val, ok := ctx.Get("userClient")
-	if !ok {
-		u.logger.Error("user client instance not found !")
-		ctx.JSON(http.StatusInternalServerError, rsp.BaseRsp{
-			StatusCode: rsp.Internal,
-		})
-		return
-	}
-	c := val.(pb.UserClient)
+	// 创建客户端
+	c := u.userConn.NewUserClient()
 
 	// 设置超时时间 | set the timeout
 	rpcCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -84,15 +79,8 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 
 // RegisterVerify 验证用户邮箱
 func (u *UserHandler) RegisterVerify(ctx *gin.Context) {
-	// 在gin.Context中读取userClient对象信息 | get userClient instance from gon.Context
-	val, ok := ctx.Get("userClient")
-	if !ok {
-		ctx.JSON(http.StatusInternalServerError, rsp.BaseRsp{
-			StatusCode: rsp.Internal,
-		})
-		return
-	}
-	c := val.(pb.UserClient)
+	// 创建客户端
+	c := u.userConn.NewUserClient()
 
 	// 取得url中的taskId参数，提供给rpc接口进行信息查找
 	taskId := ctx.Param("task_id")
@@ -165,16 +153,8 @@ func (u *UserHandler) UserLogin(ctx *gin.Context) {
 		return
 	}
 
-	// 从gin.Context中取出UserClient实例
-	val, ok := ctx.Get(UserClientKey)
-	if !ok {
-		u.logger.Error("user client not found")
-		ctx.JSON(http.StatusInternalServerError, rsp.BaseRsp{
-			StatusCode: rsp.Internal,
-		})
-		return
-	}
-	c := val.(pb.UserClient)
+	//创建客户端
+	c := u.userConn.NewUserClient()
 
 	// 设置超时时间
 	rpcCtx, cancel := context.WithTimeout(context.Background(), time.Second)

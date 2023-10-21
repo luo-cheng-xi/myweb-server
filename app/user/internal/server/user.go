@@ -49,6 +49,7 @@ func NewUserServer(
 }
 
 func (s *UserServer) Login(ctx context.Context, in *pb.LoginReq) (*pb.LoginResp, error) {
+	s.logger.Debug("login function was called")
 	userInfo := po.User{}
 	switch in.LoginBy.(type) {
 	case *pb.LoginReq_Name:

@@ -9,18 +9,15 @@ package main
 import (
 	"myweb/app/gateway/internal/handler"
 	"myweb/app/gateway/pkg/log"
-	"myweb/app/gateway/register"
+	"myweb/app/gateway/rpc"
 )
 
 // Injectors from wire.go:
 
 func InitGateway() (*Handlers, error) {
 	logger := log.NewLogger()
-	userHandler := handler.NewUserHandler(logger)
-	etcdRegister, err := register.NewEtcdRegister()
-	if err != nil {
-		return nil, err
-	}
-	handlers := NewGateway(userHandler, etcdRegister)
+	userConn := rpc.NewUserConn()
+	userHandler := handler.NewUserHandler(logger, userConn)
+	handlers := NewGateway(userHandler)
 	return handlers, nil
 }

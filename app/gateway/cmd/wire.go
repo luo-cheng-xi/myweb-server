@@ -9,14 +9,14 @@ import (
 	"github.com/google/wire"
 	"myweb/app/gateway/internal/handler"
 	"myweb/app/gateway/pkg/log"
-	"myweb/app/gateway/register"
+	"myweb/app/gateway/rpc"
 )
 
 func InitGateway() (*Handlers, error) {
 	wire.Build(
 		NewGateway,
-		register.NewEtcdRegister,
 		handler.NewUserHandler,
+		rpc.NewUserConn,
 		log.NewLogger,
 	)
 	return &Handlers{}, nil

@@ -2,11 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
-	"myweb/app/api/pb"
-	"myweb/app/gateway/internal/handler"
 	"net/http"
 )
 
@@ -43,20 +39,5 @@ func SetMiddleWare(r *gin.Engine) {
 			return
 		}
 		c.Next()
-	})
-}
-
-func SetRpc(r *gin.Engine) {
-	// 客户端与给定目标建立连接
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("create client error %#v", err)
-	}
-	// 注册客户端连接，返回UserClient对象
-	c := pb.NewUserClient(conn)
-
-	// 将client对象注入到context上下文中供函数调用
-	r.Use(func(ctx *gin.Context) {
-		ctx.Set(handler.UserClientKey, c)
 	})
 }
